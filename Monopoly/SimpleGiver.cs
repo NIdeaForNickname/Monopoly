@@ -11,7 +11,7 @@ internal class SimpleGiver: Tile
 
     public override TurnResult OnStepped(Player player)
     {
-        if (Money > 0) 
+        if (Money < 0) 
             return new TurnResult
             {
                 Message = "You need to pay the price",
@@ -29,7 +29,7 @@ internal class SimpleGiver: Tile
 
     public override bool Action(Player player)
     {
-        if (Money > 0)
+        if (Money < 0)
         {
             Transaction tr = new Transaction(
                 null,

@@ -1,6 +1,8 @@
+using System.Collections;
+
 namespace Utilities;
 
-public class HybridList<T>
+public class HybridList<T>: IEnumerable<T>
 {
     private List<T> _list;
     private Dictionary<string, T> _dictionary;
@@ -10,7 +12,7 @@ public class HybridList<T>
         _list = new List<T>();
         _dictionary = new Dictionary<string, T>();
     }
-    public void Add(string key, T item)
+    public HybridList<T> Add(string key, T item)
     {
         if (_dictionary.ContainsKey(key))
         {
@@ -19,6 +21,7 @@ public class HybridList<T>
 
         _list.Add(item);
         _dictionary[key] = item;
+        return this;
     }
 
     public bool Remove(string key)
@@ -130,4 +133,18 @@ public class HybridList<T>
     public int Count => _list.Count;
     public IEnumerable<string> Keys => _dictionary.Keys;
     public IEnumerable<T> Values => _list;
+    
+    public IEnumerator<T> GetEnumerator()
+    {
+        return _list.GetEnumerator(); // Iterate in insertion order
+    }
+
+    public int IndexOf(T i)
+    {
+        return _list.IndexOf(i);
+    }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

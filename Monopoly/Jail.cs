@@ -1,73 +1,58 @@
 namespace Monopoly;
 
-class Jail: Tile
+class Jail : Tile
 {
-    public Dictionary<string, JailState> JailPlayers { get; private set; }
-        
+    public Dictionary<string, JailState> JailPlayers { get; } = new();
+    
     public class JailState
     {
-        public Player player { get; set; }
-        public int timeLeft { get; set; }
+        public Player Player { get; set; }
+        public int TimeLeft { get; set; }
     }
 
-    public override bool Action(Player player)
+    public Jail(string name, uint pos) : base(name, pos) { }
+
+    public override TurnResult OnStepped(Player player)
     {
-        if (JailPlayers.TryGetValue(player.Name, out JailState jailState))
+        if (JailPlayers.ContainsKey(player.Name))
+            return new TurnResult { Message = "You're stuck in jail!", MandatoryAction = true };
+        
+        return new TurnResult { Message = "Just visiting", MandatoryAction = false };
+    }
+
+    public bool SendToJail(Player player)
+    {
+        if (!player.MoveTo(this)) return false;
+        
+        JailPlayers[player.Name] = new JailState { Player = player, TimeLeft = 3 };
+        return true;
+    }
+
+    public void ProcessJailTurn(Player player)
+    {
+        if (JailPlayers.TryGetValue(player.Name, out JailState state))
         {
-            jailState.timeLeft--;
-            if (jailState.timeLeft <= 0)
+            state.TimeLeft--;
+            if (state.TimeLeft <= 0)
             {
                 JailPlayers.Remove(player.Name);
             }
         }
+    }
+
+    public override bool Action(Player player)
+    {
+        ProcessJailTurn(player);
         return true;
     }
 
     public override bool RemovePlayer(Player player)
     {
-        if (JailPlayers.TryGetValue(player.Name, out JailState jailState))
+        if (JailPlayers.ContainsKey(player.Name))
         {
             return false;
         }
-        return base.RemovePlayer(player);
-    }
-
-    public Jail(string name, uint pos) : base(name, pos)
-    {
-        JailPlayers = new Dictionary<string, JailState>();
-    }
-
-    public override TurnResult OnStepped(Player player)
-    {
-        if (JailPlayers.TryGetValue(player.Name, out JailState jailState))
-        {
-            return new TurnResult
-            {
-                Message = "You Are stuck in prison",
-                MandatoryAction = true
-            };
-        }
-        else
-        {
-            return new TurnResult
-            {
-                Message = "Just Passing by a prison",
-                MandatoryAction = true
-            };
-        }
-    }
-
-    public bool SendToJail(Player player)
-    {
-        if (player.MoveTo(this))
-        {
-            JailPlayers.Add(player.Name, new JailState
-            {
-                player = player,
-                timeLeft = 3
-            });
-            return true;
-        }
-        return false;
+        base.RemovePlayer(player);
+        return true;
     }
 }

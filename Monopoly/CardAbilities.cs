@@ -3,7 +3,6 @@ namespace Monopoly;
 internal partial class Card
 {
     public bool Action_GoToJail() { return Owner.MoveTo(_board.GetLandmark("Jail")); }
-
     public bool Action_GetPaid100()
     {
         Transaction tr = new Transaction(
@@ -102,6 +101,18 @@ internal partial class Card
         );
         return tr.Execute();
     }
-    
-    
+}
+
+internal static class CardAction
+{
+    public static bool GoToJail(Card card) => card.Action_GoToJail();
+    public static bool GetPaid100(Card card) => card.Action_GetPaid100();
+    public static bool Pay50(Card card) => card.Action_Pay50();
+    public static bool GetPaid200(Card card) => card.Action_GetPaid200();
+    public static bool GetPaid25(Card card) => card.Action_GetPaid25();
+    public static bool GetPaid10(Card card) => card.Action_GetPaid10();
+    public static bool GetPaid20(Card card) => card.Action_GetPaid20();
+    public static bool Pay10(Card card) => card.Action_Pay10();
+    public static bool Pay150(Card card) => card.Action_Pay150();
+    public static bool CollectFromPlayers(Card card) => card.Action_CollectFromPlayers();
 }

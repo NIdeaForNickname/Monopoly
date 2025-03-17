@@ -1,6 +1,6 @@
 namespace Monopoly;
 
-internal class Infrastructure : Tile, IGroupable
+internal class Infrastructure : Tile, IGroupable, IBuyable
     {
         
         // temp
@@ -23,7 +23,6 @@ internal class Infrastructure : Tile, IGroupable
         {
             if (player == Owner)
             {
-                // later upgrades
                 return true;
             }
             else if (Owner != null)

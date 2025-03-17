@@ -2,14 +2,16 @@ namespace Monopoly;
 
 internal class InfrastructureGroup
 {
-    List<IGroupable> infrastructure;
+    internal List<IGroupable> infrastructure;
     private List<int> pricelist;
     
-    InfrastructureGroup(List<IGroupable> infrastructure, List<int> pricelist)
+    public InfrastructureGroup(List<IGroupable> infrastructure, List<int> pricelist)
     {
         this.infrastructure = infrastructure;
         this.pricelist = pricelist;
     }
+    
+    public void AddInfrastructure(IGroupable infrastructure, int price){}
 
     public int GetPrice(Infrastructure id)
     {
